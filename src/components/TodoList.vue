@@ -207,8 +207,16 @@
                     return !task.completed;
                 }).length;
             },
+            totalTaskCompleted: function(){
+                if (!this.todoLists.length){
+                    return 0;
+                }
+                return this.todoLists.filter((task) => {
+                    return task.completed;
+                }).length;
+            },
             hasTasksCompleted: function(){
-                return this.totalTaskToDo > 0;
+                return totalTaskCompleted > 0;
             },
             todoListsFiltered: function(){
                 if (this.filterBy === "all"){

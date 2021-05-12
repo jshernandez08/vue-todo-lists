@@ -56,10 +56,10 @@
                 <p style="font-size: 18px;">
                     <b-checkbox
                         type="is-success"
-                        v-model="checkedAllTaskCompleted"
+                        v-model="checkedAllTasksCompleted"
                         @input="markAllTasksCompleted"
                     >
-                        Mark all completed / <i>{{ totalTaskToDo }} tasks to do</i>
+                        Mark all completed / <i>{{ totalTasksToDo }} tasks to do</i>
                     </b-checkbox>
                 </p>
             </div>
@@ -114,7 +114,7 @@
             return {
                 today: moment().format('MMMM Do YYYY'),
                 dayWeek: moment().format('dddd'),
-                checkedAllTaskCompleted: false,
+                checkedAllTasksCompleted: false,
                 filterBy: "all",
                 todoLists: [{
                     _id: 1,
@@ -129,10 +129,10 @@
                 deep: true,
                 handler: function(newValue){
                     if (!newValue.length){
-                        this.checkedAllTaskCompleted = false;
+                        this.checkedAllTasksCompleted = false;
                         return;
                     }
-                    this.checkedAllTaskCompleted = this.totalTaskToDo === 0;
+                    this.checkedAllTasksCompleted = this.totalTasksToDo === 0;
                 }
             }
         },
@@ -199,7 +199,7 @@
                 }
                 return this.todoLists[this.todoLists.length - 1]._id + 1;
             },
-            totalTaskToDo: function(){
+            totalTasksToDo: function(){
                 if (!this.todoLists.length){
                     return 0;
                 }
@@ -207,7 +207,7 @@
                     return !task.completed;
                 }).length;
             },
-            totalTaskCompleted: function(){
+            totalTasksCompleted: function(){
                 if (!this.todoLists.length){
                     return 0;
                 }
@@ -216,7 +216,7 @@
                 }).length;
             },
             hasTasksCompleted: function(){
-                return totalTaskCompleted > 0;
+                return this.totalTasksCompleted > 0;
             },
             todoListsFiltered: function(){
                 if (this.filterBy === "all"){

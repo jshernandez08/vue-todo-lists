@@ -57,7 +57,7 @@
                 });
             },
             onEditTask: function(taskId, e){
-                var taskValue = e.target.value;
+                let taskValue = e.target.value;
                 if (taskValue.trim().length === 0){
                     return;
                 }

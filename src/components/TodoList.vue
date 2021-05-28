@@ -113,7 +113,7 @@
         },
         methods: {
             addTask: function(e){
-                var task = e.target.value;
+                let task = e.target.value;
                 if (task.trim().length === 0){
                     return;
                 }

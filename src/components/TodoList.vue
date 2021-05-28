@@ -13,41 +13,12 @@
         />
     </b-field><br/>
     <div v-for="task in todoListsFiltered" :key="task._id">
-        <div class="columns">
-            <div class="column">
-                <span
-                    v-if="!task.editing"
-                    :class="{ completed: task.completed }"
-                    @dblclick="editTask(task)"
-                >
-                    {{ task.title }}
-                </span>
-                <input
-                    v-else
-                    type="text"
-                    class="input is-success"
-                    :value="task.title"
-                    :ref="'inputEditTask-' + task._id"
-                    @keyup.enter="onEditTask(task._id, $event)"
-                    @blur="onEditTask(task._id, $event)"
-                    @keyup.esc="cancelEdit(task)"
-                />
-            </div>
-            <div class="column">
-                <b-checkbox
-                    v-model="task.completed"
-                    type="is-success"
-                >
-                </b-checkbox>
-                <b-button
-                    type="is-danger"
-                    size="is-small"
-                    @click="removeTask(task._id)"
-                >
-                    X
-                </b-button>
-            </div>
-        </div>
+        <ListItem 
+            :task="task"
+            @edit-task="onEditTask"
+            @remove-task="onRemoveTask"
+        >
+        </ListItem>
     </div>
     <hr/>
     <div v-show="filterBy === 'all'">
@@ -106,10 +77,14 @@
 </template>
 
 <script>
+    import ListItem from './ListItem';
     import moment from 'moment';
 
     export default {
         name: 'TodoList',
+        components: {
+            ListItem
+        },
         data: function(){
             return {
                 today: moment().format('MMMM Do YYYY'),
@@ -150,30 +125,17 @@
                 });
                 e.target.value = "";
             },
-            editTask: function(task){
-                task.editing = true;
-                this.$nextTick(() => {
-                    this.$refs["inputEditTask-" + task._id][0].focus();
-                });
-            },
-            onEditTask: function(taskId, e){
-                var task = e.target.value;
-                if (task.trim().length === 0){
-                    return;
-                }
+            onEditTask: function(taskData){
                 this.todoLists = this.todoLists.map(function(todo){
-                    if (todo._id === taskId){
-                        todo.title = task;
+                    if (todo._id === taskData._id){
+                        todo.title = taskData.value;
                         todo.editing = false;
                         return todo;
                     }
                     return todo;
                 });
             },
-            cancelEdit: function(task){
-                task.editing = false;
-            },
-            removeTask: function(taskId){
+            onRemoveTask: function(taskId){
                 this.todoLists = this.todoLists.filter((task) => {
                     return task._id !== taskId;
                 });
@@ -238,8 +200,4 @@
 </script>
 
 <style scoped>
-    .completed {
-        text-decoration: line-through;
-        color: grey;
-    }
 </style>
